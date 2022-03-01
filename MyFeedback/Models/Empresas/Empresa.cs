@@ -8,9 +8,8 @@ namespace MyFeedback.Models.Empresas
         public long Id { get; set; }
         public string Nome { get; set; }
         public string Site { get; set; }
-        
         public ICollection<Area> Areas { get; set; }
-        
+
         public Empresa(string nome, string site)
         {
             Nome = nome;
