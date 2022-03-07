@@ -19,4 +19,4 @@ O comando criará dois containeres para o banco, um para testes(homolog) e o out
 
 Caso você não possua o docker será necessário fazer o download do [PostgreSQL](https://www.postgresql.org/download/) e criar uma conexão com as mesmas configurações do arquivo `postgres.yml`.
 
-Após a criação do banco de dados, verifique se as **ConnectionStrings** nos arquivos `appsettings.json` e `appsettings.Development.json` estão corretas.
+Após a criação do banco de dados, verifique se as **ConnectionStrings** nos arquivos `appsettings.json` e `appsettings.Development.json` estão corretas para que a aplicação possa conversar com ele.
