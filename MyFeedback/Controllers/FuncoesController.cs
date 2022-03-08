@@ -32,7 +32,7 @@ namespace MyFeedback.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:long}")]
         public IActionResult Get(long id)
         {
             try
@@ -69,7 +69,7 @@ namespace MyFeedback.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("{id:long}")]
         public IActionResult Put([FromBody] Funcao funcao, long id)
         {
             try
@@ -94,7 +94,7 @@ namespace MyFeedback.Controllers
             }
         }
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
             try
