@@ -19,75 +19,47 @@ namespace MyFeedback.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            try
-            {
-                var feedbacks = _context.Feedbacks.ToList();
+            var feedbacks = _context.Feedbacks.ToList();
 
-                return Ok(feedbacks);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(feedbacks);
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            try
-            {
-                var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
+            var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
 
-                if(feedback == null)
-                {
-                    return NotFound("Feedback não encontrado.");
-                }
-                return Ok(feedback);
-            }
-            catch(Exception ex)
+            if(feedback == null)
             {
-                return Conflict(ex.Message);
+                return NotFound("Feedback não encontrado.");
             }
+            return Ok(feedback);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Feedback feedback)
         {
-            try
-            {
-                _context.Feedbacks.Add(feedback);
-                _context.SaveChanges();
+            _context.Feedbacks.Add(feedback);
+            _context.SaveChanges();
 
-                return Ok(new { Mensagem = "Feedback cadastrado com sucesso."});
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(new { Mensagem = "Feedback cadastrado com sucesso."});
         }
 
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            try
+            var feedbackNoDb = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
+
+            if(feedbackNoDb == null)
             {
-                var feedbackNoDb = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
-
-                if(feedbackNoDb == null)
-                {
-                    return NotFound("Feedback inexistente.");
-                }
-
-                _context.Feedbacks.Remove(feedbackNoDb);
-
-                return Ok(new { Mensagem = "Feedback removido com sucesso." });
+                return NotFound("Feedback inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            _context.Feedbacks.Remove(feedbackNoDb);
+
+            return Ok(new { Mensagem = "Feedback removido com sucesso." });
         }
     }    
 }

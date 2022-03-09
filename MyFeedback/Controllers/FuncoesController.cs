@@ -19,101 +19,67 @@ namespace MyFeedback.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            try
-            {
-                var funcoes = _context.Funcoes.ToList();
+            var funcoes = _context.Funcoes.ToList();
 
-                return Ok(funcoes);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(funcoes);
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            try
-            {
-                var funcao = _context.Funcoes.FirstOrDefault(f => f.Id == id);
+            var funcao = _context.Funcoes.FirstOrDefault(f => f.Id == id);
 
-                if(funcao == null)
-                {
-                    return Conflict("Função não encontrada.");
-                }
-
-                return Ok(funcao);
-            }
-            catch(Exception ex)
+            if(funcao == null)
             {
-                return Conflict(ex.Message);
+                return Conflict("Função não encontrada.");
             }
+
+            return Ok(funcao);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Funcao funcao)
         {
-            try
-            {
-                _context.Funcoes.Add(funcao);
-                _context.SaveChanges();
+            _context.Funcoes.Add(funcao);
+            _context.SaveChanges();
 
-                return Ok(new { Mensagem = "Função cadastrada com sucesso."});
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(new { Mensagem = "Função cadastrada com sucesso."});
         }
 
         [HttpPut]
         [Route("{id:long}")]
         public IActionResult Put([FromBody] Funcao funcao, long id)
         {
-            try
-            {   
-                var funcaoNoDb = _context.Funcoes.FirstOrDefault(f => f.Id == id);
+            var funcaoNoDb = _context.Funcoes.FirstOrDefault(f => f.Id == id);
 
-                if(funcaoNoDb == null)
-                {
-                    return NotFound("Função inexistente.");
-                }
-
-                funcaoNoDb = funcao;
-
-                _context.Funcoes.Update(funcaoNoDb);
-                _context.SaveChanges();
-
-                return Ok(new { Mensagem = "Função atualizada com sucesso."});
-            }
-            catch(Exception ex)
+            if(funcaoNoDb == null)
             {
-                return Conflict(ex.Message);
+                return NotFound("Função inexistente.");
             }
+
+            funcaoNoDb = funcao;
+
+            _context.Funcoes.Update(funcaoNoDb);
+            _context.SaveChanges();
+
+            return Ok(new { Mensagem = "Função atualizada com sucesso."});
         }
+
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            try
+            var funcaoNoDb = _context.Funcoes.FirstOrDefault(f => f.Id == id);
+
+            if(funcaoNoDb == null)
             {
-                var funcaoNoDb = _context.Funcoes.FirstOrDefault(f => f.Id == id);
-
-                if(funcaoNoDb == null)
-                {
-                    return NotFound("Função inexistente.");
-                }
-
-                _context.Funcoes.Remove(funcaoNoDb);
-
-                return Ok(new { Mensagem = "Função removida com sucesso." });
+                return NotFound("Função inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            _context.Funcoes.Remove(funcaoNoDb);
+
+            return Ok(new { Mensagem = "Função removida com sucesso." });
         }
     }    
 }

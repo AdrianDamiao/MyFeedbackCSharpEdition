@@ -19,101 +19,66 @@ namespace MyFeedback.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            try
-            {
-                var empresas = _context.Empresas.ToList();
+            var empresas = _context.Empresas.ToList();
 
-                return Ok(empresas);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(empresas);
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            try
-            {
-                var empresa = _context.Empresas.FirstOrDefault(e => e.Id == id);
+            var empresa = _context.Empresas.FirstOrDefault(e => e.Id == id);
 
-                if(empresa == null)
-                {
-                    return NotFound("Empresa não encontrada.");
-                }
-                return Ok(empresa);
-            }
-            catch(Exception ex)
+            if(empresa == null)
             {
-                return Conflict(ex.Message);
+                return NotFound("Empresa não encontrada.");
             }
+            return Ok(empresa);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Empresa empresa)
         {
-            try
-            {
-                _context.Empresas.Add(empresa);
-                _context.SaveChanges();
+            _context.Empresas.Add(empresa);
+            _context.SaveChanges();
 
-                return Ok(new { Mensagem = "Empresa cadastrada com sucesso."});
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(new { Mensagem = "Empresa cadastrada com sucesso."});
         }
 
         [HttpPut]
         [Route("{id:long}")]
         public IActionResult Put([FromBody] Empresa empresa, long id)
         {
-            try
-            {   
-                var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
+            var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
 
-                if(empresaNoDb == null)
-                {
-                    return NotFound("Empresa inexistente.");
-                }
-
-                empresaNoDb = empresa;
-
-                _context.Empresas.Update(empresaNoDb);
-                _context.SaveChanges();
-
-                return Ok(new { Mensagem = "Empresa atualizada com sucesso."});
-            }
-            catch(Exception ex)
+            if(empresaNoDb == null)
             {
-                return Conflict(ex.Message);
+                return NotFound("Empresa inexistente.");
             }
+
+            empresaNoDb = empresa;
+
+            _context.Empresas.Update(empresaNoDb);
+            _context.SaveChanges();
+
+            return Ok(new { Mensagem = "Empresa atualizada com sucesso."});
         }
 
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            try
+            var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
+
+            if(empresaNoDb == null)
             {
-                var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
-
-                if(empresaNoDb == null)
-                {
-                    return NotFound("Empresa inexistente.");
-                }
-
-                _context.Empresas.Remove(empresaNoDb);
-
-                return Ok(new { Mensagem = "Empresa removida com sucesso." });
+                return NotFound("Empresa inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            _context.Empresas.Remove(empresaNoDb);
+
+            return Ok(new { Mensagem = "Empresa removida com sucesso." });
         }
     }    
 }

@@ -19,102 +19,62 @@ namespace MyFeedback.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            try
-            {
-                var areas = _context.Areas.ToList();
+            var areas = _context.Areas.ToList();
 
-                return Ok(areas);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(areas);
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            try
-            {
-                var area = _context.Areas.FirstOrDefault(a => a.Id == id);
+            var area = _context.Areas.FirstOrDefault(a => a.Id == id);
 
-                if(area == null)
-                {
-                    return NotFound("Área não encontrada.");
-                }
-                
-                return Ok(area);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(area);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Area area)
         {
-            try
-            {
-                _context.Areas.Add(area);
-                _context.SaveChanges();
+            _context.Areas.Add(area);
+            _context.SaveChanges();
 
-                return Ok(new { Mensagem = "Área cadastrada com sucesso."});
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(new { Mensagem = "Área cadastrada com sucesso."});
         }
 
         [HttpPut]
         [Route("{id:long}")]
         public IActionResult Put([FromBody] Area area, long id)
         {
-            try
+            var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
+
+            if(areaNoDb == null)
             {
-                var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
-
-                if(areaNoDb == null)
-                {
-                    return NotFound("Área inexistente.");
-                }
-
-                areaNoDb = area;
-
-                _context.Areas.Update(areaNoDb);
-                _context.SaveChanges();
-
-                return Ok(new { Mensagem = "Área atualizada com sucesso."});
+                return NotFound("Área inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            areaNoDb = area;
+
+            _context.Areas.Update(areaNoDb);
+            _context.SaveChanges();
+
+            return Ok(new { Mensagem = "Área atualizada com sucesso."});
         }
 
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            try
+            var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
+
+            if(areaNoDb == null)
             {
-                var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
-
-                if(areaNoDb == null)
-                {
-                    return NotFound("Área inexistente.");
-                }
-
-                _context.Areas.Remove(areaNoDb);
-
-                return Ok(new { Mensagem = "Área removida com sucesso." });
+                return NotFound("Área inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            _context.Areas.Remove(areaNoDb);
+
+            return Ok(new { Mensagem = "Área removida com sucesso." });
         }
     }    
 }
