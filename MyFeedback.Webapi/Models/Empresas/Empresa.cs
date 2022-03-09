@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using MyFeedback.Models.Areas;
+using MyFeedback.Webapi.Models.Areas;
 
-namespace MyFeedback.Models.Empresas
+namespace MyFeedback.Webapi.Models.Empresas
 {
     public class Empresa
     {

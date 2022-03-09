@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MyFeedback.Migrations
+namespace MyFeedback.Webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace MyFeedback.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("MyFeedback.Models.Areas.Area", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Areas.Area", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,7 +40,7 @@ namespace MyFeedback.Migrations
                     b.ToTable("Areas");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Colaboradores.Colaborador", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Colaboradores.Colaborador", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +71,7 @@ namespace MyFeedback.Migrations
                     b.ToTable("Colaboradores");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Empresas.Empresa", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Empresas.Empresa", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,7 +89,7 @@ namespace MyFeedback.Migrations
                     b.ToTable("Empresas");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Feedbacks.Feedback", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Feedbacks.Feedback", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +112,7 @@ namespace MyFeedback.Migrations
                     b.ToTable("Feedbacks");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Funcoes.Funcao", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Funcoes.Funcao", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,9 +130,9 @@ namespace MyFeedback.Migrations
                     b.ToTable("Funcoes");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Areas.Area", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Areas.Area", b =>
                 {
-                    b.HasOne("MyFeedback.Models.Empresas.Empresa", "Empresa")
+                    b.HasOne("MyFeedback.Webapi.Models.Empresas.Empresa", "Empresa")
                         .WithMany("Areas")
                         .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -141,15 +141,15 @@ namespace MyFeedback.Migrations
                     b.Navigation("Empresa");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Colaboradores.Colaborador", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Colaboradores.Colaborador", b =>
                 {
-                    b.HasOne("MyFeedback.Models.Areas.Area", "Area")
+                    b.HasOne("MyFeedback.Webapi.Models.Areas.Area", "Area")
                         .WithMany("Colaboradores")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyFeedback.Models.Funcoes.Funcao", "Funcao")
+                    b.HasOne("MyFeedback.Webapi.Models.Funcoes.Funcao", "Funcao")
                         .WithMany("Colaboradores")
                         .HasForeignKey("FuncaoId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -160,9 +160,9 @@ namespace MyFeedback.Migrations
                     b.Navigation("Funcao");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Feedbacks.Feedback", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Feedbacks.Feedback", b =>
                 {
-                    b.HasOne("MyFeedback.Models.Colaboradores.Colaborador", "Colaborador")
+                    b.HasOne("MyFeedback.Webapi.Models.Colaboradores.Colaborador", "Colaborador")
                         .WithMany("Feedbacks")
                         .HasForeignKey("ColaboradorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -171,22 +171,22 @@ namespace MyFeedback.Migrations
                     b.Navigation("Colaborador");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Areas.Area", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Areas.Area", b =>
                 {
                     b.Navigation("Colaboradores");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Colaboradores.Colaborador", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Colaboradores.Colaborador", b =>
                 {
                     b.Navigation("Feedbacks");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Empresas.Empresa", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Empresas.Empresa", b =>
                 {
                     b.Navigation("Areas");
                 });
 
-            modelBuilder.Entity("MyFeedback.Models.Funcoes.Funcao", b =>
+            modelBuilder.Entity("MyFeedback.Webapi.Models.Funcoes.Funcao", b =>
                 {
                     b.Navigation("Colaboradores");
                 });

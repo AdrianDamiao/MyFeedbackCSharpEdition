@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using MyFeedback.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Colaboradores;
 
-namespace MyFeedback.Models.Funcoes
+namespace MyFeedback.Webapi.Models.Funcoes
 {
     public class Funcao
     {
