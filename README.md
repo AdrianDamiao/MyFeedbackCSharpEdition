@@ -2,7 +2,7 @@
 
 🚧 Work in Progress 🚧
 
-#### O projeto MyFeedback se trata do desenvolvimento de uma aplicação para avaliação anônima do trabalho colaboradores de uma empresa.
+#### O projeto MyFeedback se trata do desenvolvimento de uma aplicação para avaliação anônima do trabalho colaboradores de uma empresa. A proposta do projeto surgiu durante um curso de NodeJS pelo professor ![Otávio Lube](https://github.com/otaviolube), porém, o objetivo aqui é implementá-lo utilizando outras tecnologias.
 
 #### Diagrama de classe do projeto
 
