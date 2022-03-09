@@ -19,102 +19,67 @@ namespace MyFeedback.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            try
-            {
-                var colaboradores = _context.Colaboradores.ToList();
+            var colaboradores = _context.Colaboradores.ToList();
 
-                return Ok(colaboradores);
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(colaboradores);
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            try
-            {
-                var colaborador = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+            var colaborador = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
 
-                if(colaborador == null)
-                {
-                    return NotFound("Colaborador não encontrado.");
-                }
-
-                return Ok(colaborador);
-            }
-            catch(Exception ex)
+            if(colaborador == null)
             {
-                return Conflict(ex.Message);
+                return NotFound("Colaborador não encontrado.");
             }
+
+            return Ok(colaborador);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] Colaborador colaborador)
         {
-            try
-            {
-                _context.Colaboradores.Add(colaborador);
-                _context.SaveChanges();
+            _context.Colaboradores.Add(colaborador);
+            _context.SaveChanges();
 
-                return Ok(new { Mensagem = "Colaborador cadastrado com sucesso."});
-            }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+            return Ok(new { Mensagem = "Colaborador cadastrado com sucesso."});
         }
 
         [HttpPut]
         [Route("{id:long}")]
         public IActionResult Put([FromBody] Colaborador colaborador, long id)
         {
-            try
+            var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+
+            if(colaboradorNoDb == null)
             {
-                var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
-
-                if(colaboradorNoDb == null)
-                {
-                    return NotFound("Colaborador inexistente.");
-                }
-
-                colaboradorNoDb = colaborador;
-
-                _context.Colaboradores.Update(colaboradorNoDb);
-                _context.SaveChanges();
-
-                return Ok(new { Mensagem = "Colaborador atualizado com sucesso."});
+                return NotFound("Colaborador inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            colaboradorNoDb = colaborador;
+
+            _context.Colaboradores.Update(colaboradorNoDb);
+            _context.SaveChanges();
+
+            return Ok(new { Mensagem = "Colaborador atualizado com sucesso."});
         }
 
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            try
+            var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+
+            if(colaboradorNoDb == null)
             {
-                var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
-
-                if(colaboradorNoDb == null)
-                {
-                    return NotFound("Colaborador inexistente.");
-                }
-
-                _context.Colaboradores.Remove(colaboradorNoDb);
-
-                return Ok(new { Mensagem = "Colaborador removido com sucesso." });
+                return NotFound("Colaborador inexistente.");
             }
-            catch(Exception ex)
-            {
-                return Conflict(ex.Message);
-            }
+
+            _context.Colaboradores.Remove(colaboradorNoDb);
+
+            return Ok(new { Mensagem = "Colaborador removido com sucesso." });
         }
     }    
 }
