@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using MyFeedback.Models.Colaboradores;
-using MyFeedback.Models.Empresas;
+using MyFeedback.Webapi.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Empresas;
 
-namespace MyFeedback.Models.Areas
+namespace MyFeedback.Webapi.Models.Areas
 {
     public class Area
     {

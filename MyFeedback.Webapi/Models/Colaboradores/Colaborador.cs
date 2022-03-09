@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using MyFeedback.Models.Funcoes;
-using MyFeedback.Models.Feedbacks;
-using MyFeedback.Models.Areas;
+using MyFeedback.Webapi.Models.Funcoes;
+using MyFeedback.Webapi.Models.Feedbacks;
+using MyFeedback.Webapi.Models.Areas;
 
-namespace MyFeedback.Models.Colaboradores
+namespace MyFeedback.Webapi.Models.Colaboradores
 {
     public class Colaborador
     {

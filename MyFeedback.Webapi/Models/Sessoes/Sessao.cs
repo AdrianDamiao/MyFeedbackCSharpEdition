@@ -1,6 +1,6 @@
-using MyFeedback.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Colaboradores;
 
-namespace MyFeedback.Models.Sessoes
+namespace MyFeedback.Webapi.Models.Sessoes
 {
     public class Sessao
     {

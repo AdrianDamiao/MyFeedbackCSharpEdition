@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using MyFeedback.Models.Areas;
-using MyFeedback.Models.Colaboradores;
-using MyFeedback.Models.Empresas;
-using MyFeedback.Models.Feedbacks;
-using MyFeedback.Models.Funcoes;
+using MyFeedback.Webapi.Models.Areas;
+using MyFeedback.Webapi.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Empresas;
+using MyFeedback.Webapi.Models.Feedbacks;
+using MyFeedback.Webapi.Models.Funcoes;
 
 public class ApplicationDbContext : DbContext
 {
