@@ -2,7 +2,7 @@
 
 🚧 Work in Progress 🚧
 
-#### O projeto MyFeedback se trata do desenvolvimento de uma API para avaliação anônima da função exercida pelos colaboradores de uma empresa.
+#### O projeto MyFeedback se trata do desenvolvimento de uma aplicação para avaliação anônima do trabalho colaboradores de uma empresa.
 
 #### Diagrama de classe do projeto
 
