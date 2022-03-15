@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyFeedback.Webapi.Middlewares;
+using MyFeedback.Webapi.Services.Areas;
 
 namespace MyFeedback.Webapi
 {
@@ -36,6 +37,7 @@ namespace MyFeedback.Webapi
             });
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
+            services.AddScoped<IAreaService, AreaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
