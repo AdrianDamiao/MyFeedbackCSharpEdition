@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using MyFeedback.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Colaboradores;
 
-namespace MyFeedback.Controllers
+namespace MyFeedback.Webapi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

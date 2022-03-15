@@ -12,9 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using MyFeedback.Middlewares;
+using MyFeedback.Webapi.Middlewares;
 
-namespace MyFeedback
+namespace MyFeedback.Webapi
 {
     public class Startup
     {

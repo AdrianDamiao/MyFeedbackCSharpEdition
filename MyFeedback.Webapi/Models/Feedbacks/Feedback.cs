@@ -1,6 +1,6 @@
-using MyFeedback.Models.Colaboradores;
+using MyFeedback.Webapi.Models.Colaboradores;
 
-namespace MyFeedback.Models.Feedbacks
+namespace MyFeedback.Webapi.Models.Feedbacks
 {
     public class Feedback
     {
