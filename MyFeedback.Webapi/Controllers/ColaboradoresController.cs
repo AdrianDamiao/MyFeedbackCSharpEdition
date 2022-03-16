@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.Models.Colaboradores;
+using MyFeedback.Webapi.Services.Colaboradores;
 
 namespace MyFeedback.Webapi.Controllers
 {
@@ -9,77 +11,59 @@ namespace MyFeedback.Webapi.Controllers
     [Route("[controller]")]
     public class ColaboradoresController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IColaboradorService _colaboradorService;
 
-        public ColaboradoresController(ApplicationDbContext context)
+        public ColaboradoresController(IColaboradorService colaboradorService)
         {
-            _context = context;
+            _colaboradorService = colaboradorService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var colaboradores = _context.Colaboradores.ToList();
+            var colaboradores = await _colaboradorService.BuscaTodos();
 
-            return Ok(colaboradores);
+            return Ok(new { Mensagem = "Colaboradores encontrados", Colaboradores = colaboradores });
         }
 
         [HttpGet]
         [Route("{id:long}")]
-        public IActionResult Get(long id)
+        public async Task<IActionResult> Get(long id)
         {
-            var colaborador = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+            var colaborador = await _colaboradorService.BuscaPorId(id);
 
-            if(colaborador == null)
-            {
-                return NotFound("Colaborador não encontrado.");
-            }
-
-            return Ok(colaborador);
+            return Ok(new { Mensagem = "Colaborador encontrado", Colaborador = colaborador });
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Colaborador colaborador)
+        public async Task<IActionResult> Post([FromBody] Colaborador colaborador)
         {
-            _context.Colaboradores.Add(colaborador);
-            _context.SaveChanges();
+            if(colaborador == null)
+            {
+                return BadRequest("Colaborador não informado");
+            }
 
-            return Ok(new { Mensagem = "Colaborador cadastrado com sucesso."});
+            var novoColaborador = await _colaboradorService.Cria(colaborador);
+
+            return Ok(new { Mensagem = "Colaborador cadastrado com sucesso.", Colaborador = novoColaborador });
         }
 
         [HttpPut]
         [Route("{id:long}")]
-        public IActionResult Put([FromBody] Colaborador colaborador, long id)
+        public async Task<IActionResult> Put(long id, [FromBody] Colaborador colaborador)
         {
-            var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+            await _colaboradorService.Atualiza(id, colaborador);
 
-            if(colaboradorNoDb == null)
-            {
-                return NotFound("Colaborador inexistente.");
-            }
-
-            colaboradorNoDb = colaborador;
-
-            _context.Colaboradores.Update(colaboradorNoDb);
-            _context.SaveChanges();
-
-            return Ok(new { Mensagem = "Colaborador atualizado com sucesso."});
+            return Ok(new { Mensagem = "Colaborador atualizado com sucesso.", Colaborador = colaborador });
         }
 
         [HttpDelete]
         [Route("{id:long}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var colaboradorNoDb = _context.Colaboradores.FirstOrDefault(c => c.Id == id);
+            var colaboradorNoDb = await _colaboradorService.Deleta(id);
 
-            if(colaboradorNoDb == null)
-            {
-                return NotFound("Colaborador inexistente.");
-            }
-
-            _context.Colaboradores.Remove(colaboradorNoDb);
-
-            return Ok(new { Mensagem = "Colaborador removido com sucesso." });
+            return Ok(new { Mensagem = "Colaborador removido com sucesso.", Colaborador = colaboradorNoDb });
         }
     }    
 }
