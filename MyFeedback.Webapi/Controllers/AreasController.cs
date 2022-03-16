@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.Models.Areas;
+using MyFeedback.Webapi.Services.Areas;
 
 namespace MyFeedback.Webapi.Controllers
 {   
@@ -9,72 +11,64 @@ namespace MyFeedback.Webapi.Controllers
     [Route("[controller]")]
     public class AreasController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IAreaService _areaService;
 
-        public AreasController(ApplicationDbContext context)
+        public AreasController(IAreaService areaService)
         {
-            _context = context;
+            _areaService = areaService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var areas = _context.Areas.ToList();
+            var areas = await _areaService.BuscaTodos();
 
-            return Ok(areas);
+            if(areas == null)
+            {
+                return NotFound("Nenhuma área encontrada");
+            }
+
+            return Ok(new { Mensagem = "Áreas encontradas", Areas = areas });
         }
 
         [HttpGet]
         [Route("{id:long}")]
-        public IActionResult Get(long id)
+        public async Task<IActionResult> Get(long id)
         {
-            var area = _context.Areas.FirstOrDefault(a => a.Id == id);
+            var area = await _areaService.BuscaPorId(id);
 
-            return Ok(area);
+            return Ok(new { Mensagem = "Área encontrada", Area = area });
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Area area)
+        public async Task<IActionResult> Post([FromBody] Area area)
         {
-            _context.Areas.Add(area);
-            _context.SaveChanges();
+            if(area == null)
+            {
+                return BadRequest("Área não informada");
+            }
 
-            return Ok(new { Mensagem = "Área cadastrada com sucesso."});
+            var novaArea = await _areaService.Cria(area);
+
+            return Ok(new { Mensagem = "Área cadastrada com sucesso.", Area = novaArea });    
         }
 
         [HttpPut]
         [Route("{id:long}")]
-        public IActionResult Put([FromBody] Area area, long id)
+        public async Task<IActionResult> Put(long id, [FromBody] Area area)
         {
-            var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
+            await _areaService.Atualiza(id, area);
 
-            if(areaNoDb == null)
-            {
-                return NotFound("Área inexistente.");
-            }
-
-            areaNoDb = area;
-
-            _context.Areas.Update(areaNoDb);
-            _context.SaveChanges();
-
-            return Ok(new { Mensagem = "Área atualizada com sucesso."});
+            return Ok(new { Mensagem = "Área atualizada com sucesso.", Area = area });
         }
 
         [HttpDelete]
         [Route("{id:long}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var areaNoDb = _context.Areas.FirstOrDefault(a => a.Id == id);
-
-            if(areaNoDb == null)
-            {
-                return NotFound("Área inexistente.");
-            }
-
-            _context.Areas.Remove(areaNoDb);
-
-            return Ok(new { Mensagem = "Área removida com sucesso." });
+            var areaNoDb = await _areaService.Deleta(id);
+           
+            return Ok(new { Mensagem = "Área removida com sucesso.", Area = areaNoDb });
         }
     }    
 }
