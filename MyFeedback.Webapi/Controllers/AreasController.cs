@@ -55,7 +55,7 @@ namespace MyFeedback.Webapi.Controllers
 
         [HttpPut]
         [Route("{id:long}")]
-        public async Task<IActionResult> Put([FromBody] Area area, long id)
+        public async Task<IActionResult> Put(long id, [FromBody] Area area)
         {
             await _areaService.Atualiza(id, area);
 

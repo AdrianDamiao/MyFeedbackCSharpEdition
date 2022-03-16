@@ -16,12 +16,12 @@ namespace MyFeedback.Webapi.Services.Areas
 
         public async Task<List<Area>> BuscaTodos()
         {
-            return await _context.Areas.ToListAsync();
+            return await _context.Areas.AsNoTracking().ToListAsync();
         }
 
         public async Task<Area> BuscaPorId(long id)
         {
-            var areaNoDb = await _context.Areas.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            var areaNoDb = await _context.Areas.FirstOrDefaultAsync(a => a.Id == id);
 
             if(areaNoDb == null)
             {
@@ -41,7 +41,7 @@ namespace MyFeedback.Webapi.Services.Areas
 
         public async Task<Area> Atualiza(long id, Area area)
         {
-            var areaNoDb = await _context.Areas.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            var areaNoDb = await _context.Areas.FirstOrDefaultAsync(a => a.Id == id);
 
             if(areaNoDb == null)
             {
