@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.Models.Feedbacks;
+using MyFeedback.Webapi.Services.Feedbacks;
 
 namespace MyFeedback.Webapi.Controllers
 {
@@ -9,57 +11,50 @@ namespace MyFeedback.Webapi.Controllers
     [Route("[controller]")]
     public class FeedbacksController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IFeedbackService _feedbackService;
 
-        public FeedbacksController(ApplicationDbContext context)
+        public FeedbacksController(IFeedbackService feedbackService)
         {
-            _context = context;
+            _feedbackService = feedbackService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var feedbacks = _context.Feedbacks.ToList();
+            var feedbacks = await _feedbackService.BuscaTodos();
 
-            return Ok(feedbacks);
+            return Ok(new { Mensagem = "Feedbacks encontrados.", Feedbacks = feedbacks });
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            var feedback = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
+            var feedback = _feedbackService.BuscaPorId(id);
 
-            if(feedback == null)
-            {
-                return NotFound("Feedback não encontrado.");
-            }
-            return Ok(feedback);
+            return Ok(new { Mensagem = "Feedback encontrado.", Feedback = feedback });
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Feedback feedback)
+        public async Task<IActionResult> Post([FromBody] Feedback feedback)
         {
-            _context.Feedbacks.Add(feedback);
-            _context.SaveChanges();
+            if(feedback == null)
+            {
+                return BadRequest("Feedback não informado");
+            }
 
-            return Ok(new { Mensagem = "Feedback cadastrado com sucesso."});
+            var feedbackNovo = await _feedbackService.Cria(feedback);
+
+            return Ok(new { Mensagem = "Feedback cadastrado com sucesso.", Feedback = feedbackNovo });
         }
 
         [HttpDelete]
         [Route("{id:long}")]
         public IActionResult Delete(long id)
         {
-            var feedbackNoDb = _context.Feedbacks.FirstOrDefault(f => f.Id == id);
+            var feedbackNoDb = _feedbackService.Deleta(id);
 
-            if(feedbackNoDb == null)
-            {
-                return NotFound("Feedback inexistente.");
-            }
-
-            _context.Feedbacks.Remove(feedbackNoDb);
-
-            return Ok(new { Mensagem = "Feedback removido com sucesso." });
+            return Ok(new { Mensagem = "Feedback removido com sucesso.", Feedback = feedbackNoDb });
         }
     }    
 }
