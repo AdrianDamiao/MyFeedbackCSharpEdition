@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.Models.Empresas;
+using MyFeedback.Webapi.Services.Empresas;
 
 namespace MyFeedback.Webapi.Controllers
 {
@@ -9,76 +11,59 @@ namespace MyFeedback.Webapi.Controllers
     [Route("[controller]")]
     public class EmpresasController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IEmpresaService _empresaService;
 
-        public EmpresasController(ApplicationDbContext context)
+        public EmpresasController(IEmpresaService empresaService)
         {
-            _context = context;
+            _empresaService = empresaService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var empresas = _context.Empresas.ToList();
+            var empresas = await _empresaService.BuscaTodos();
 
-            return Ok(empresas);
+            return Ok(new { Mensagem = "Empresas encontradas", Empresas = empresas });
         }
 
         [HttpGet]
         [Route("{id:long}")]
-        public IActionResult Get(long id)
+        public async Task<IActionResult> Get(long id)
         {
-            var empresa = _context.Empresas.FirstOrDefault(e => e.Id == id);
+            var empresa = await _empresaService.BuscaPorId(id);
 
-            if(empresa == null)
-            {
-                return NotFound("Empresa não encontrada.");
-            }
-            return Ok(empresa);
+            return Ok(new { Mensagem = "Empresa encontrada", Empresa = empresa });
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Empresa empresa)
+        public async Task<IActionResult> Post([FromBody] Empresa empresa)
         {
-            _context.Empresas.Add(empresa);
-            _context.SaveChanges();
+            if(empresa == null)
+            {
+                return BadRequest("Empresa não informada");
+            }
 
-            return Ok(new { Mensagem = "Empresa cadastrada com sucesso."});
+            var novaEmpresa = await _empresaService.Cria(empresa);
+
+            return Ok(new { Mensagem = "Empresa cadastrada com sucesso.", Empresa = novaEmpresa});
         }
 
         [HttpPut]
         [Route("{id:long}")]
-        public IActionResult Put([FromBody] Empresa empresa, long id)
+        public async Task<IActionResult> Put(long id, [FromBody] Empresa empresa)
         {
-            var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
+            await _empresaService.Atualiza(id, empresa);
 
-            if(empresaNoDb == null)
-            {
-                return NotFound("Empresa inexistente.");
-            }
-
-            empresaNoDb = empresa;
-
-            _context.Empresas.Update(empresaNoDb);
-            _context.SaveChanges();
-
-            return Ok(new { Mensagem = "Empresa atualizada com sucesso."});
+            return Ok(new { Mensagem = "Empresa atualizada com sucesso.", Empresa = empresa});
         }
 
         [HttpDelete]
         [Route("{id:long}")]
-        public IActionResult Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
-            var empresaNoDb = _context.Empresas.FirstOrDefault(e => e.Id == id);
+            var empresaNoDb = await _empresaService.Deleta(id);
 
-            if(empresaNoDb == null)
-            {
-                return NotFound("Empresa inexistente.");
-            }
-
-            _context.Empresas.Remove(empresaNoDb);
-
-            return Ok(new { Mensagem = "Empresa removida com sucesso." });
+            return Ok(new { Mensagem = "Empresa removida com sucesso.", Empresa = empresaNoDb });
         }
     }    
 }
