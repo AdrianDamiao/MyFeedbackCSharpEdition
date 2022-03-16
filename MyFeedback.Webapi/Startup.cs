@@ -14,6 +14,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyFeedback.Webapi.Middlewares;
 using MyFeedback.Webapi.Services.Areas;
+using MyFeedback.Webapi.Services.Colaboradores;
+using MyFeedback.Webapi.Services.Empresas;
+using MyFeedback.Webapi.Services.Feedbacks;
+using MyFeedback.Webapi.Services.Funcoes;
 
 namespace MyFeedback.Webapi
 {
@@ -38,6 +42,10 @@ namespace MyFeedback.Webapi
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
             services.AddScoped<IAreaService, AreaService>();
+            services.AddScoped<IColaboradorService, ColaboradorService>();
+            services.AddScoped<IEmpresaService, EmpresaService>();
+            services.AddScoped<IFeedbackService, FeedbackService>();
+            services.AddScoped<IFuncaoService, FuncaoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
