@@ -28,7 +28,7 @@ namespace MyFeedback.Webapi.Controllers
                 return NotFound("Nenhuma área encontrada");
             }
 
-            return Ok(areas);
+            return Ok(new { Mensagem = "Áreas encontradas", Areas = areas });
         }
 
         [HttpGet]
@@ -37,7 +37,7 @@ namespace MyFeedback.Webapi.Controllers
         {
             var area = await _areaService.BuscaPorId(id);
 
-            return Ok(area);
+            return Ok(new { Mensagem = "Área encontrada", Area = area });
         }
 
         [HttpPost]
@@ -57,18 +57,18 @@ namespace MyFeedback.Webapi.Controllers
         [Route("{id:long}")]
         public async Task<IActionResult> Put([FromBody] Area area, long id)
         {
-            await _areaService.Atualiza(area);
+            await _areaService.Atualiza(id, area);
 
-            return Ok(new { Mensagem = "Área atualizada com sucesso."});
+            return Ok(new { Mensagem = "Área atualizada com sucesso.", Area = area });
         }
 
         [HttpDelete]
         [Route("{id:long}")]
-        public Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id)
         {
             var areaNoDb = await _areaService.Deleta(id);
            
-            return Ok(new { Mensagem = "Área removida com sucesso." });
+            return Ok(new { Mensagem = "Área removida com sucesso.", Area = areaNoDb });
         }
     }    
 }
