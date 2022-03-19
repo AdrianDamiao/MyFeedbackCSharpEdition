@@ -9,7 +9,7 @@ namespace MyFeedback.Webapi.Services.Areas
         Task<List<Area>> BuscaTodos();
         Task<Area> BuscaPorId(long id);
         Task<Area> Cria(Area area);
-        Task<Area> Atualiza(long id, Area area);
+        Task<Area> Atualiza(Area area);
         Task<Area> Deleta(long id);
     }
 }
