@@ -9,7 +9,7 @@ on:
     
 defaults:
   run:
-    working-directory: ./MyFeedback
+    working-directory: ./MyFeedback.Webapi
 
 jobs:
   build:
