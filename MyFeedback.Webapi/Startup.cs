@@ -48,7 +48,7 @@ namespace MyFeedback.Webapi
             services.AddScoped<IFeedbackService, FeedbackService>();
             services.AddScoped<IFuncaoService, FuncaoService>();
 
-            //Adiciona AutoMapper
+            // Adiciona AutoMapper
             services.AddAutoMapper(typeof(Startup));
         }
 
