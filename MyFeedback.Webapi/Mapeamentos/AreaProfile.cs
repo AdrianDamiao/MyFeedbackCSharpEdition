@@ -16,7 +16,8 @@ namespace MyFeedback.Webapi.Mapeamentos
             CreateMap<AtualizaAreaInputDTO, Area>()
                 .ForMember(a => a.Empresa, opt => opt.Ignore());
 
-            CreateMap<Area, BuscaAreaOutputDTO>();
+            CreateMap<Area, BuscaAreaOutputDTO>()
+                .ForMember(a => a.Empresa, opt => opt.Ignore());
 
             CreateMap<Area, BuscaTodasAreasOutputDTO>();
 	    }

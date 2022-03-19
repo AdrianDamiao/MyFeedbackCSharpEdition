@@ -46,7 +46,7 @@ namespace MyFeedback.Webapi.Services.Areas
 
         public async Task<Area> Atualiza(Area area)
         {
-            var areaNoDb = await _context.Areas.FirstOrDefaultAsync(a => a.Id == area.Id);
+            var areaNoDb = await BuscaPorId(area.Id);
 
             if(areaNoDb == null)
             {

@@ -59,7 +59,7 @@ namespace MyFeedback.Webapi.Controllers
 
             var novaArea = await _areaService.Cria(_mapper.Map<Area>(inputDTO));
 
-            return Ok(new { Mensagem = "Área cadastrada com sucesso.", Area = novaArea });    
+            return Ok(new { Mensagem = "Área cadastrada com sucesso", Area = novaArea });    
         }
 
         [HttpPut]
@@ -71,7 +71,7 @@ namespace MyFeedback.Webapi.Controllers
 
             await _areaService.Atualiza(area);
 
-            return Ok(new { Mensagem = "Área atualizada com sucesso.", Area = inputDTO });
+            return Ok(new { Mensagem = "Área atualizada com sucesso", Area = inputDTO });
         }
 
         [HttpDelete]
@@ -80,7 +80,7 @@ namespace MyFeedback.Webapi.Controllers
         {
             var areaNoDb = await _areaService.Deleta(id);
            
-            return Ok(new { Mensagem = "Área removida com sucesso.", Area = areaNoDb });
+            return Ok(new { Mensagem = "Área removida com sucesso", Area = areaNoDb });
         }
     }    
 }
