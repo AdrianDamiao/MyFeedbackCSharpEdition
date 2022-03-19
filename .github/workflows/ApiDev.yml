@@ -1,11 +1,10 @@
-name: Build API
+name: Build API Dev
 
 on:
   push:
-    branches: 
-      - main
-    paths:
-      - 'MyFeedback.Webapi/**'
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
 
 defaults:
   run:
@@ -26,6 +25,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-#     O projeto ainda não possui testes
-#     - name: Test 
+#     O Projeto ainda não possui testes
+#     - name: Test
 #       run: dotnet test --no-build --verbosity normal

@@ -1,12 +1,11 @@
-name: Build Api Dev
+name: Build API Main
 
 on:
   push:
-    branches: 
-      - dev
-    paths:
-      - 'MyFeedback.Webapi/**'
-    
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 defaults:
   run:
     working-directory: ./MyFeedback.Webapi
