@@ -16,14 +16,5 @@ namespace MyFeedback.Webapi.Models.Colaboradores
         public long AreaId { get; set; }
         public Area Area { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
-        
-        public Colaborador(string nome, string email, string senha, long funcaoId)
-        {
-            Nome = nome;
-            Email = email;
-            Senha = senha;
-            FuncaoId = funcaoId;
-            Feedbacks = new List<Feedback>();
-        }
     }
 }
