@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MyFeedback.Webapi.DTOs.Feedbacks;
 using MyFeedback.Webapi.Models.Feedbacks;
 using MyFeedback.Webapi.Services.Feedbacks;
 
@@ -12,40 +15,51 @@ namespace MyFeedback.Webapi.Controllers
     public class FeedbacksController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
+        private readonly IMapper _mapper;
 
-        public FeedbacksController(IFeedbackService feedbackService)
+        public FeedbacksController(IFeedbackService feedbackService, IMapper mapper)
         {
             _feedbackService = feedbackService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var feedbacks = await _feedbackService.BuscaTodos();
+            var resultados = await _feedbackService.BuscaTodos();
 
-            return Ok(new { Mensagem = "Feedbacks encontrados.", Feedbacks = feedbacks });
+            if(resultados == null)
+            {
+                return NotFound("Nenhum feedback encontrado");
+            }
+
+            var feedbacks = _mapper.Map<List<BuscaTodosFeedbacksOutputDTO>>(resultados);
+
+            return Ok(new { Mensagem = "Feedbacks encontrados", Feedbacks = feedbacks });
         }
 
         [HttpGet]
         [Route("{id:long}")]
         public IActionResult Get(long id)
         {
-            var feedback = _feedbackService.BuscaPorId(id);
+            var resultado = _feedbackService.BuscaPorId(id);
 
-            return Ok(new { Mensagem = "Feedback encontrado.", Feedback = feedback });
+            var feedback = _mapper.Map<BuscaFeedbackOutputDTO>(resultado);
+
+            return Ok(new { Mensagem = "Feedback encontrado", Feedback = feedback });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Feedback feedback)
+        public async Task<IActionResult> Post([FromBody] CriaFeedbackInputDTO inputDTO)
         {
-            if(feedback == null)
+            if(inputDTO == null)
             {
                 return BadRequest("Feedback não informado");
             }
 
-            var feedbackNovo = await _feedbackService.Cria(feedback);
+            var feedbackNovo = await _feedbackService.Cria(_mapper.Map<Feedback>(inputDTO));
 
-            return Ok(new { Mensagem = "Feedback cadastrado com sucesso.", Feedback = feedbackNovo });
+            return Ok(new { Mensagem = "Feedback cadastrado com sucesso", Feedback = feedbackNovo });
         }
 
         [HttpDelete]
@@ -54,7 +68,7 @@ namespace MyFeedback.Webapi.Controllers
         {
             var feedbackNoDb = _feedbackService.Deleta(id);
 
-            return Ok(new { Mensagem = "Feedback removido com sucesso.", Feedback = feedbackNoDb });
+            return Ok(new { Mensagem = "Feedback removido com sucesso", Feedback = feedbackNoDb });
         }
     }    
 }
