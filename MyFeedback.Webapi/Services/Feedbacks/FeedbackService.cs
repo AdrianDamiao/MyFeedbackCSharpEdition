@@ -39,26 +39,9 @@ namespace MyFeedback.Webapi.Services.Feedbacks
             return feedback;
         }
 
-        public async Task<Feedback> Atualiza(long id, Feedback feedback)
-        {
-            var feedbackNoDb = await _context.Feedbacks.FirstOrDefaultAsync(f => f.Id == id);
-
-            if (feedbackNoDb == null)
-            {
-                throw new Exception("Feedback não encontrado");
-            }
-
-            feedbackNoDb = feedback;
-
-            _context.Feedbacks.Update(feedbackNoDb);
-            await _context.SaveChangesAsync();
-
-            return feedbackNoDb;
-        }
-
         public async Task<Feedback> Deleta(long id)
         {
-            var feedbackNoDb = await _context.Feedbacks.FirstOrDefaultAsync(f => f.Id == id);
+            var feedbackNoDb = await BuscaPorId(id);
 
             if (feedbackNoDb == null)
             {

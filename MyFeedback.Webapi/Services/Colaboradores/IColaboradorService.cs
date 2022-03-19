@@ -9,7 +9,7 @@ namespace MyFeedback.Webapi.Services.Colaboradores
         Task<List<Colaborador>> BuscaTodos();
         Task<Colaborador> BuscaPorId(long id);
         Task<Colaborador> Cria(Colaborador colaborador);
-        Task<Colaborador> Atualiza(long id, Colaborador colaborador);
+        Task<Colaborador> Atualiza(Colaborador colaborador);
         Task<Colaborador> Deleta(long id);
     }
 }

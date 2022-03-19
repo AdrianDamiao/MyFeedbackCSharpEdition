@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyFeedback.Webapi.Models.Colaboradores;
 
@@ -9,9 +11,11 @@ namespace MyFeedback.Webapi.Services.Colaboradores
     public class ColaboradorService : IColaboradorService
     {
         private readonly ApplicationDbContext _context;
-        public ColaboradorService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public ColaboradorService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<List<Colaborador>> BuscaTodos()
@@ -21,7 +25,10 @@ namespace MyFeedback.Webapi.Services.Colaboradores
 
         public async Task<Colaborador> BuscaPorId(long id)
         {
-            var colaboradorNoDb = await _context.Colaboradores.FirstOrDefaultAsync(c => c.Id == id);
+            var colaboradorNoDb = await _context.Colaboradores.Where(c => c.Id == id)
+                                                              .Include(c => c.Funcao)
+                                                              .Include(c => c.Area)  
+                                                              .FirstOrDefaultAsync();
 
             if (colaboradorNoDb == null)
             {
@@ -39,16 +46,16 @@ namespace MyFeedback.Webapi.Services.Colaboradores
             return colaborador;
         }
 
-        public async Task<Colaborador> Atualiza(long id, Colaborador colaborador)
+        public async Task<Colaborador> Atualiza(Colaborador colaborador)
         {
-            var colaboradorNoDb = await _context.Colaboradores.FirstOrDefaultAsync(c => c.Id == id);
+            var colaboradorNoDb = await BuscaPorId(colaborador.Id);
 
             if (colaboradorNoDb == null)
             {
                 throw new Exception("Colaborador não encontrado");
             }
 
-            colaboradorNoDb = colaborador;
+            _mapper.Map(colaborador, colaboradorNoDb);
 
             _context.Colaboradores.Update(colaboradorNoDb);
             await _context.SaveChangesAsync();
@@ -58,7 +65,7 @@ namespace MyFeedback.Webapi.Services.Colaboradores
 
         public async Task<Colaborador> Deleta(long id)
         {
-            var colaboradorNoDb = await _context.Colaboradores.FirstOrDefaultAsync(c => c.Id == id);
+            var colaboradorNoDb = await BuscaPorId(id);
 
             if(colaboradorNoDb == null)
             {

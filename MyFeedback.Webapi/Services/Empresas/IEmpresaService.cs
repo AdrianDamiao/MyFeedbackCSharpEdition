@@ -9,7 +9,7 @@ namespace MyFeedback.Webapi.Services.Empresas
         Task<List<Empresa>> BuscaTodos();
         Task<Empresa> BuscaPorId(long id);
         Task<Empresa> Cria(Empresa empresa);
-        Task<Empresa> Atualiza(long id, Empresa empresa);
+        Task<Empresa> Atualiza(Empresa empresa);
         Task<Empresa> Deleta(long id);
     }
 }

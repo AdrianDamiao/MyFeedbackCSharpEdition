@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyFeedback.Webapi.Models.Funcoes;
 
@@ -9,9 +10,11 @@ namespace MyFeedback.Webapi.Services.Funcoes
     public class FuncaoService : IFuncaoService
     {
         private readonly ApplicationDbContext _context;
-        public FuncaoService(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public FuncaoService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<List<Funcao>> BuscaTodos()
@@ -39,16 +42,16 @@ namespace MyFeedback.Webapi.Services.Funcoes
             return funcao;
         }
 
-        public async Task<Funcao> Atualiza(long id, Funcao funcao)
+        public async Task<Funcao> Atualiza(Funcao funcao)
         {
-            var funcaoNoDb = await _context.Funcoes.FirstOrDefaultAsync(f => f.Id == id);
+            var funcaoNoDb = await BuscaPorId(funcao.Id);
 
             if (funcaoNoDb == null)
             {
                 throw new Exception("Função não encontrada");
             }
 
-            funcaoNoDb = funcao;
+            _mapper.Map(funcao, funcaoNoDb);
 
             _context.Funcoes.Update(funcaoNoDb);
             await _context.SaveChangesAsync();
@@ -58,7 +61,7 @@ namespace MyFeedback.Webapi.Services.Funcoes
 
         public async Task<Funcao> Deleta(long id)
         {
-            var funcaoNoDb = await _context.Funcoes.FirstOrDefaultAsync(f => f.Id == id);
+            var funcaoNoDb = await BuscaPorId(id);
 
             if (funcaoNoDb == null)
             {

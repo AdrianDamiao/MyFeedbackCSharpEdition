@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MyFeedback.Webapi.DTOs.Funcoes;
 using MyFeedback.Webapi.Models.Funcoes;
 using MyFeedback.Webapi.Services.Funcoes;
 
@@ -12,16 +15,25 @@ namespace MyFeedback.Webapi.Controllers
     public class FuncoesController : ControllerBase
     {
         private readonly IFuncaoService _funcaoService;
+        private readonly IMapper _mapper;
 
-        public FuncoesController(IFuncaoService funcaoService)
+        public FuncoesController(IFuncaoService funcaoService, IMapper mapper)
         {
             _funcaoService = funcaoService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var funcoes = await _funcaoService.BuscaTodos();
+            var resultados = await _funcaoService.BuscaTodos();
+
+            if(resultados == null)
+            {
+                return NotFound("Nenhuma função encontrada");
+            }
+
+            var funcoes = _mapper.Map<List<BuscaTodasFuncoesOutputDTO>>(resultados);
 
             return Ok(new { Mensagem = "Funções encontradas.", Funcoes = funcoes });
         }
@@ -30,31 +42,36 @@ namespace MyFeedback.Webapi.Controllers
         [Route("{id:long}")]
         public async Task<IActionResult> Get(long id)
         {
-            var funcao = await _funcaoService.BuscaPorId(id);
+            var resultado = await _funcaoService.BuscaPorId(id);
+
+            var funcao = _mapper.Map<BuscaFuncaoOutputDTO>(resultado);
 
             return Ok(new { Mensagem = "Função encontrada.", Funcao = funcao });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Funcao funcao)
+        public async Task<IActionResult> Post([FromBody] CriaFuncaoInputDTO inputDTO)
         {
-            if(funcao == null)
+            if(inputDTO == null)
             {
                 return BadRequest("Função não informada");
             }
 
-            var novaFuncao = await _funcaoService.Cria(funcao);
+            var novaFuncao = await _funcaoService.Cria(_mapper.Map<Funcao>(inputDTO));
 
             return Ok(new { Mensagem = "Função cadastrada com sucesso.", Funcao = novaFuncao });
         }
 
         [HttpPut]
         [Route("{id:long}")]
-        public async Task<IActionResult> Put(long id, [FromBody] Funcao funcao)
+        public async Task<IActionResult> Put(long id, [FromBody] AtualizaFuncaoInputDTO inputDTO)
         {
-            await _funcaoService.Atualiza(id, funcao);
+            var funcao = _mapper.Map<Funcao>(inputDTO);
+            funcao.Id = id;
 
-            return Ok(new { Mensagem = "Função atualizada com sucesso.", Funcao = funcao });
+            await _funcaoService.Atualiza(funcao);
+
+            return Ok(new { Mensagem = "Função atualizada com sucesso.", Funcao = inputDTO });
         }
 
         [HttpDelete]
