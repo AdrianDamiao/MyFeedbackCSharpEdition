@@ -1,6 +1,6 @@
 namespace MyFeedback.Webapi.DTOs.Funcoes
 {
-    public class BuscaTodasEmpresasOutputDTO
+    public class BuscaTodasFuncoesOutputDTO
     {
         public long Id { get; set; }
         public string Nome { get; set; }
