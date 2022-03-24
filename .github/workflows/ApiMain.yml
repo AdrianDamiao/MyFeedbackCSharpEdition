@@ -12,7 +12,7 @@ defaults:
 
 env:
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  APP_NAME: ${{ 'MyFeedback' }}
+  APP_NAME: ${{ 'myfeedbackcsharpedition' }}
 
 jobs:
   build:
