@@ -66,8 +66,6 @@ namespace MyFeedback.Webapi
                 });
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
