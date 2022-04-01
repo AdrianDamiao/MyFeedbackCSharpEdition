@@ -16,4 +16,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+EXPOSE 5000
 CMD ASPNETCORE_URLS="http://*:$PORT" dotnet MyFeedback.dll
