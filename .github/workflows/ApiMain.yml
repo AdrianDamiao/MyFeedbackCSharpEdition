@@ -29,6 +29,4 @@ jobs:
       run: |
         heroku container:push web -a $APP_NAME
         heroku container:release web -a $APP_NAME
-                
-    - name: Finish
-      run: heroku logs --tail -a $APP_NAME
+
