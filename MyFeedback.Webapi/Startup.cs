@@ -62,7 +62,6 @@ namespace MyFeedback.Webapi
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFeedback v1");
-                    c.RoutePrefix = string.Empty;
                 });
             }
 
