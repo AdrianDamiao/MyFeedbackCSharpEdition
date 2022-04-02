@@ -21,6 +21,7 @@ namespace MyFeedback.Webapi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
                 });
     }
 }
