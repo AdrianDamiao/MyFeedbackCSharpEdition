@@ -66,7 +66,15 @@ namespace MyFeedback.Webapi
                 });
             }
 
-            app.UseHttpsRedirection();
+            if(env.IsProduction())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyFeedback Production v1");
+                    c.RoutePrefix = string.Empty;
+                });
+            }
 
             app.UseRouting();
 
