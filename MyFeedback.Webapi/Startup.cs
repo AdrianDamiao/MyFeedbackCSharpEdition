@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyFeedback.Webapi.Middlewares;
 using MyFeedback.Webapi.Services.Areas;
@@ -19,6 +12,7 @@ using MyFeedback.Webapi.Services.Colaboradores;
 using MyFeedback.Webapi.Services.Empresas;
 using MyFeedback.Webapi.Services.Feedbacks;
 using MyFeedback.Webapi.Services.Funcoes;
+using MyFeedback.Webapi.Utils;
 
 namespace MyFeedback.Webapi
 {
@@ -40,8 +34,9 @@ namespace MyFeedback.Webapi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFeedback", Version = "v1" });
             });
+            
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetHerokuConnectionString()));
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
             services.AddScoped<IAreaService, AreaService>();
             services.AddScoped<IColaboradorService, ColaboradorService>();
             services.AddScoped<IEmpresaService, EmpresaService>();
