@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MyFeedback.Webapi.Utils;
 
 namespace MyFeedback.Webapi
 {
@@ -21,7 +22,7 @@ namespace MyFeedback.Webapi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
+                    webBuilder.UseUrls(ConectorHeroku.GetHerokuUrl());
                 });
     }
 }
