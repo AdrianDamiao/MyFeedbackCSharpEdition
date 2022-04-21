@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MyFeedback.Webapi.ExtensionMethods;
 using MyFeedback.Webapi.Models.Colaboradores;
 
 namespace MyFeedback.Webapi.Services.Colaboradores
@@ -18,9 +19,11 @@ namespace MyFeedback.Webapi.Services.Colaboradores
             _mapper = mapper;
         }
 
-        public async Task<List<Colaborador>> BuscaTodos()
+        public async Task<PagedModel<Colaborador>> BuscaTodosPaginado(int pagina, int limite)
         {
-            return await _context.Colaboradores.AsNoTracking().ToListAsync();
+            return await _context.Colaboradores.AsNoTracking()
+                                               .OrderBy(c => c.Id)
+                                               .PaginaAsync(pagina, limite);
         }
 
         public async Task<Colaborador> BuscaPorId(long id)
