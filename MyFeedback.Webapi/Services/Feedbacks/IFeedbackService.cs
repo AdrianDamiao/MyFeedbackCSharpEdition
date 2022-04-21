@@ -6,7 +6,7 @@ namespace MyFeedback.Webapi.Services.Feedbacks
 {
     public interface IFeedbackService
     {
-        Task<List<Feedback>> BuscaTodos();
+        Task<PagedModel<Feedback>> BuscaTodosPaginado(int pagina, int limite);
         Task<Feedback> BuscaPorId(long id);
         Task<Feedback> Cria(Feedback feedback);
         Task<Feedback> Deleta(long id);

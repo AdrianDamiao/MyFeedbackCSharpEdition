@@ -1,7 +1,8 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using MyFeedback.Webapi.ExtensionMethods;
 using MyFeedback.Webapi.Models.Feedbacks;
 
 namespace MyFeedback.Webapi.Services.Feedbacks
@@ -14,9 +15,11 @@ namespace MyFeedback.Webapi.Services.Feedbacks
             _context = context;
         }
 
-        public async Task<List<Feedback>> BuscaTodos()
+        public async Task<PagedModel<Feedback>> BuscaTodosPaginado(int pagina, int limite)
         {
-            return await _context.Feedbacks.AsNoTracking().ToListAsync();
+            return await _context.Feedbacks.AsNoTracking()
+                                           .OrderBy(f => f.Id)
+                                           .PaginaAsync(pagina, limite);
         }
 
         public async Task<Feedback> BuscaPorId(long id)
