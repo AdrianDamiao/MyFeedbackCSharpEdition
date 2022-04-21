@@ -12,7 +12,7 @@ using MyFeedback.Webapi.Services.Colaboradores;
 using MyFeedback.Webapi.Services.Empresas;
 using MyFeedback.Webapi.Services.Feedbacks;
 using MyFeedback.Webapi.Services.Funcoes;
-using MyFeedback.Webapi.Utils;
+using MyFeedback.Webapi.ExtensionMethods;
 
 namespace MyFeedback.Webapi
 {

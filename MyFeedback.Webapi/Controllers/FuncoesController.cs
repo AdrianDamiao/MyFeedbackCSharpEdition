@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MyFeedback.Webapi.DTOs.Empresas;
 using MyFeedback.Webapi.DTOs.Funcoes;
 using MyFeedback.Webapi.Models.Funcoes;
 using MyFeedback.Webapi.Services.Funcoes;
@@ -24,18 +23,28 @@ namespace MyFeedback.Webapi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPaged([FromQuery] BuscaTodasFuncoesInputDTO inputDTO)
         {
-            var resultados = await _funcaoService.BuscaTodos();
+            var resultadoPaginado = await _funcaoService.BuscaTodosPaginados(inputDTO.Pagina,
+                                                                             inputDTO.Limite);
 
-            if(resultados == null)
+            if(resultadoPaginado == null)
             {
                 return NotFound("Nenhuma função encontrada");
             }
 
-            var funcoes = _mapper.Map<List<BuscaTodasFuncoesOutputDTO>>(resultados);
+            var funcoes = _mapper.Map<List<BuscaTodasFuncoesOutputDTO>>(resultadoPaginado.Itens);
 
-            return Ok(new { Mensagem = "Funções encontradas.", Funcoes = funcoes });
+            var resposta = new PagedModel<BuscaTodasFuncoesOutputDTO>
+            {
+                PaginaAtual = resultadoPaginado.PaginaAtual,
+                TotalPaginas = resultadoPaginado.TotalPaginas,
+                TamanhoPagina = resultadoPaginado.TamanhoPagina,
+                TotalItens = resultadoPaginado.TotalItens,
+                Itens = funcoes
+            };
+
+            return Ok(new { Mensagem = "Funções encontradas.", Funcoes = resposta });
         }
 
         [HttpGet]
