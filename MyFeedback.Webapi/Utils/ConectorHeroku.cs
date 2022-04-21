@@ -40,7 +40,7 @@ namespace MyFeedback.Webapi.Utils
             return "http://localhost:5001";
         }
 
-        private static bool IsEnvironmentProduction()
+        public static bool IsEnvironmentProduction()
         {
             return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Production");
         }
