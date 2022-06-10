@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MyFeedback.Webapi.ExtensionMethods;
 using MyFeedback.Webapi.Models.Areas;
 
 namespace MyFeedback.Webapi.Services.Areas
@@ -18,9 +18,11 @@ namespace MyFeedback.Webapi.Services.Areas
             _mapper = mapper;
         }
 
-        public async Task<List<Area>> BuscaTodos()
+        public async Task<PagedModel<Area>> BuscaTodosPaginado(int pagina, int limite)
         {
-            return await _context.Areas.AsNoTracking().ToListAsync();
+            return await _context.Areas.AsNoTracking()
+                                       .OrderBy(a => a.Id)
+                                       .PaginaAsync(pagina, limite);
         }
 
         public async Task<Area> BuscaPorId(long id)

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +22,28 @@ namespace MyFeedback.Webapi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPaged([FromQuery] BuscaTodasAreasInputDTO inputDTO)
         {
-            var resultados = await _areaService.BuscaTodos();
+            var resultadoPaginado = await _areaService.BuscaTodosPaginado(inputDTO.Pagina,
+                                                                          inputDTO.Limite);
 
-            if(resultados == null)
+            if(resultadoPaginado == null)
             {
                 return NotFound("Nenhuma área encontrada");
             }
 
-            var areas = _mapper.Map<List<BuscaTodasAreasOutputDTO>>(resultados);
+            var areas = _mapper.Map<List<BuscaTodasAreasOutputDTO>>(resultadoPaginado.Itens);
 
-            return Ok(new { Mensagem = "Áreas encontradas", Areas = areas });
+            var resposta = new PagedModel<BuscaTodasAreasOutputDTO>
+            {
+                PaginaAtual = resultadoPaginado.PaginaAtual,
+                TotalPaginas = resultadoPaginado.TotalPaginas,
+                TamanhoPagina = resultadoPaginado.TamanhoPagina,
+                TotalItens = resultadoPaginado.TotalItens,
+                Itens = areas
+            };
+
+            return Ok(new { Mensagem = "Áreas encontradas", Areas = resposta });
         }
 
         [HttpGet]

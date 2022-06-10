@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +22,28 @@ namespace MyFeedback.Webapi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPaged([FromQuery] BuscaTodasEmpresasInputDTO inputDTO)
         {
-            var resultados = await _empresaService.BuscaTodos();
+            var resultadoPaginado = await _empresaService.BuscaTodosPaginados(inputDTO.Pagina,
+                                                                              inputDTO.Limite);
 
-            if(resultados == null)
+            if(resultadoPaginado == null)
             {
                 return NotFound("Nenhuma empresa encontrada");
             }
 
-            var empresas = _mapper.Map<List<BuscaTodasEmpresasOutputDTO>>(resultados);
+            var empresas = _mapper.Map<List<BuscaTodasEmpresasOutputDTO>>(resultadoPaginado.Itens);
 
-            return Ok(new { Mensagem = "Empresas encontradas", Empresas = empresas });
+            var resposta = new PagedModel<BuscaTodasEmpresasOutputDTO>
+            {
+                PaginaAtual = resultadoPaginado.PaginaAtual,
+                TotalPaginas = resultadoPaginado.TotalPaginas,
+                TamanhoPagina = resultadoPaginado.TamanhoPagina,
+                TotalItens = resultadoPaginado.TotalItens,
+                Itens = empresas
+            };
+
+            return Ok(new { Mensagem = "Empresas encontradas", Empresas = resposta });
         }
 
         [HttpGet]

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +22,28 @@ namespace MyFeedback.Webapi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPaged([FromQuery] BuscaTodosColaboradoresInputDTO inputDTO)
         {
-            var resultados = await _colaboradorService.BuscaTodos();
+            var resultadoPaginado = await _colaboradorService.BuscaTodosPaginado(inputDTO.Pagina,
+                                                                                 inputDTO.Limite);
 
-            if(resultados.Count == 0)
+            if(resultadoPaginado == null)
             {
                 return NotFound("Nenhum colaborador encontrado");
             }
 
-            var colaboradores = _mapper.Map<List<BuscaTodosColaboradoresOutputDTO>>(resultados);
+            var colaboradores = _mapper.Map<List<BuscaTodosColaboradoresOutputDTO>>(resultadoPaginado.Itens);
 
-            return Ok(new { Mensagem = "Colaboradores encontrados", Colaboradores = colaboradores });
+            var resposta = new PagedModel<BuscaTodosColaboradoresOutputDTO>
+            {
+                PaginaAtual = resultadoPaginado.PaginaAtual,
+                TotalPaginas = resultadoPaginado.TotalPaginas,
+                TamanhoPagina = resultadoPaginado.TamanhoPagina,
+                TotalItens = resultadoPaginado.TotalItens,
+                Itens = colaboradores
+            };
+
+            return Ok(new { Mensagem = "Colaboradores encontrados", Colaboradores = resposta });
         }
 
         [HttpGet]

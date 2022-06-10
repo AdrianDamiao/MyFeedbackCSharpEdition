@@ -1,9 +1,8 @@
 using System;
-using System.Threading.Tasks;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
 
-namespace MyFeedback.Webapi.Utils
+namespace MyFeedback.Webapi.ExtensionMethods
 {
     public static class ConectorHeroku 
     {

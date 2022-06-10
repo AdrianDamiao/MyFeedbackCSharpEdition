@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ using MyFeedback.Webapi.Services.Colaboradores;
 using MyFeedback.Webapi.Services.Empresas;
 using MyFeedback.Webapi.Services.Feedbacks;
 using MyFeedback.Webapi.Services.Funcoes;
-using MyFeedback.Webapi.Utils;
+using MyFeedback.Webapi.ExtensionMethods;
 
 namespace MyFeedback.Webapi
 {
@@ -29,7 +30,10 @@ namespace MyFeedback.Webapi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            services.AddControllers()
+                    .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>())
+                    .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFeedback", Version = "v1" });

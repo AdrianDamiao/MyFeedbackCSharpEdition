@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,18 +22,28 @@ namespace MyFeedback.Webapi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetPaged([FromQuery] BuscaTodosFeedbacksInputDTO inputDTO)
         {
-            var resultados = await _feedbackService.BuscaTodos();
+            var resultadoPaginado = await _feedbackService.BuscaTodosPaginado(inputDTO.Pagina,
+                                                                              inputDTO.Limite);
 
-            if(resultados == null)
+            if(resultadoPaginado == null)
             {
                 return NotFound("Nenhum feedback encontrado");
             }
 
-            var feedbacks = _mapper.Map<List<BuscaTodosFeedbacksOutputDTO>>(resultados);
+            var feedbacks = _mapper.Map<List<BuscaTodosFeedbacksOutputDTO>>(resultadoPaginado.Itens);
 
-            return Ok(new { Mensagem = "Feedbacks encontrados", Feedbacks = feedbacks });
+            var resposta = new PagedModel<BuscaTodosFeedbacksOutputDTO>
+            {
+                PaginaAtual = resultadoPaginado.PaginaAtual,
+                TotalPaginas = resultadoPaginado.TotalPaginas,
+                TamanhoPagina = resultadoPaginado.TamanhoPagina,
+                TotalItens = resultadoPaginado.TotalItens,
+                Itens = feedbacks
+            };
+
+            return Ok(new { Mensagem = "Feedbacks encontrados", Feedbacks = resposta });
         }
 
         [HttpGet]

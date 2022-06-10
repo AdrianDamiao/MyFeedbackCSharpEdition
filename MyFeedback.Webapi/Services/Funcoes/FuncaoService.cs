@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using MyFeedback.Webapi.ExtensionMethods;
 using MyFeedback.Webapi.Models.Funcoes;
 
 namespace MyFeedback.Webapi.Services.Funcoes
@@ -17,9 +18,11 @@ namespace MyFeedback.Webapi.Services.Funcoes
             _mapper = mapper;
         }
 
-        public async Task<List<Funcao>> BuscaTodos()
+        public async Task<PagedModel<Funcao>> BuscaTodosPaginados(int pagina, int limite)
         {
-            return await _context.Funcoes.AsNoTracking().ToListAsync();
+            return await _context.Funcoes.AsNoTracking()
+                                         .OrderBy(f => f.Id)
+                                         .PaginaAsync(pagina, limite);
         }
 
         public async Task<Funcao> BuscaPorId(long id)
