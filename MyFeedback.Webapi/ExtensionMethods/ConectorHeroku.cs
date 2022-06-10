@@ -24,7 +24,7 @@ namespace MyFeedback.Webapi.ExtensionMethods
                 var builder = new NpgsqlConnectionStringBuilder
                 {
                     Host = host,
-                    Port = port,
+                    Port = 5432,
                     Username = username,
                     Password = password,
                     Database = database
