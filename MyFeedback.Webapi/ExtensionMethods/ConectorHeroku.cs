@@ -6,6 +6,7 @@ namespace MyFeedback.Webapi.ExtensionMethods
 {
     public static class ConectorHeroku 
     {
+        // teste
         public static string GetHerokuConnectionString(
             this IConfiguration configuration)
         {
