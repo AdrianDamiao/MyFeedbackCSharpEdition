@@ -12,17 +12,22 @@ namespace MyFeedback.Webapi.ExtensionMethods
         {
             if(IsEnvironmentProduction())
             {
-                var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                var databaseUri = new Uri(databaseUrl);
-                var userInfo = databaseUri.UserInfo.Split(':');
+                var host = Environment.GetEnvironmentVariable("Host");
+                var port = Environment.GetEnvironmentVariable("Port");
+                var username = Environment.GetEnvironmentVariable("Username");
+                var password = Environment.GetEnvironmentVariable("Password");
+                var database = Environment.GetEnvironmentVariable("Database");
+
+                // var databaseUri = new Uri(databaseUrl);
+                // var userInfo = databaseUri.UserInfo.Split(':');
 
                 var builder = new NpgsqlConnectionStringBuilder
                 {
-                    Host = databaseUri.Host,
-                    Port = databaseUri.Port,
-                    Username = userInfo[0],
-                    Password = userInfo[1],
-                    Database = databaseUri.LocalPath.TrimStart('/')
+                    Host = host,
+                    Port = 5432,
+                    Username = username,
+                    Password = password,
+                    Database = database
                 };
 
                 return builder.ToString();
