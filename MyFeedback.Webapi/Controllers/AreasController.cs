@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.DTOs.Areas;
 using MyFeedback.Webapi.Models.Areas;
@@ -8,6 +9,7 @@ using MyFeedback.Webapi.Services.Areas;
 
 namespace MyFeedback.Webapi.Controllers
 {   
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class AreasController : ControllerBase

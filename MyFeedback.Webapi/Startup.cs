@@ -14,6 +14,14 @@ using MyFeedback.Webapi.Services.Empresas;
 using MyFeedback.Webapi.Services.Feedbacks;
 using MyFeedback.Webapi.Services.Funcoes;
 using MyFeedback.Webapi.ExtensionMethods;
+using System.Reflection;
+using System.IO;
+using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using MyFeedback.Webapi.Models.Sessoes;
 
 namespace MyFeedback.Webapi
 {
@@ -30,15 +38,67 @@ namespace MyFeedback.Webapi
         public void ConfigureServices(IServiceCollection services)
         {
 
+            // Adiciona o Identity
+            services.AddIdentity<Usuario, IdentityRole>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
             services.AddControllers()
                     .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Startup>())
                     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
             
+            // Adiciona o Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyFeedback", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Digite Bearer [espaço] e o token válido como o exemplo abaixo.\r\n\rExemplo: Bearer eyJhbGciOiJI..."
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                    },
+                        new string[] {}
+                    }
+                });
             });
-            
+
+            // Adiciona Autenticação
+            services.AddAuthentication(options => 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options => 
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
+                    };
+                options.AutomaticRefreshInterval = TimeSpan.FromDays(1);
+            });
+
+            // Adiciona conexao com o banco
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(Configuration.GetHerokuConnectionString()));
 
             services.AddScoped<IAreaService, AreaService>();
@@ -51,7 +111,6 @@ namespace MyFeedback.Webapi
             services.AddAutoMapper(typeof(Startup));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -76,6 +135,8 @@ namespace MyFeedback.Webapi
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

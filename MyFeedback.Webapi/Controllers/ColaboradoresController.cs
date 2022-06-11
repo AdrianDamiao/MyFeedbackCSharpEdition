@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.DTOs.Colaboradores;
 using MyFeedback.Webapi.Models.Colaboradores;
@@ -8,6 +9,7 @@ using MyFeedback.Webapi.Services.Colaboradores;
 
 namespace MyFeedback.Webapi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ColaboradoresController : ControllerBase

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFeedback.Webapi.DTOs.Empresas;
 using MyFeedback.Webapi.DTOs.Funcoes;
@@ -9,6 +10,7 @@ using MyFeedback.Webapi.Services.Funcoes;
 
 namespace MyFeedback.Webapi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class FuncoesController : ControllerBase
